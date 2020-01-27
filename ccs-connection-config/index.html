@@ -1,0 +1,49 @@
+<script type="text/x-red" data-template-name="ia-cloud-ccs-connection-config">
+
+    <!-- url -->
+    <div class="form-row">
+        <label for="node-config-input-url"><i class="fa fa-tag"></i> <span data-i18n="ia-cloud-ccs-connection-config.url" /></label>
+        <input type="text" id="node-config-input-url" data-i18n="[placeholder]ia-cloud-ccs-connection-config.url">
+    </div>
+    <!-- userId -->
+    <div class="form-row">
+        <label for="node-config-input-userId"><i class="fa fa-user"></i> <span data-i18n="ia-cloud-ccs-connection-config.userId"></span></label>
+        <input type="text" id="node-config-input-userId">
+    </div>
+    <!-- password -->
+    <div class="form-row">
+        <label for="node-config-input-password"><i class="fa fa-lock"></i> <span data-i18n="ia-cloud-ccs-connection-config.password"></span></label>
+        <input type="password" id="node-config-input-password">
+    </div>
+    <!-- name -->
+    <div class="form-row">
+        <label for="node-config-input-name"><i class="fa fa-tag"></i> <span data-i18n="node-red:common.label.name" /></label>
+        <input type="text" id="node-config-input-name" data-i18n="[placeholder]node-red:common.label.name">
+    </div>
+
+</script>
+
+<script type="text/x-red" data-help-name="ia-cloud-ccs-connection-config">
+
+
+</script>
+
+<script type="text/javascript">
+
+    RED.nodes.registerType('ia-cloud-ccs-connection-config', {
+        category: 'config',
+        color: 'rgb(231, 180, 100)',
+        defaults: {
+            url: { value: '' },
+            name: { value: '' },
+        },
+        credentials: {
+            userId: { type: 'text' },
+            password: { type: 'password' }
+        },
+        label: function() {
+            return this.name || this._('ia-cloud-ccs-connection-config.node-name');
+        },
+    });
+
+</script>

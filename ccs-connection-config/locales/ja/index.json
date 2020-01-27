@@ -1,0 +1,8 @@
+{
+  "ia-cloud-ccs-connection-config": {
+    "node-name": "CCS接続設定",
+    "password": "パスワード",
+    "url": "URL",
+    "userId": "ユーザーID"
+  }
+}
