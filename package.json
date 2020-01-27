@@ -1,0 +1,32 @@
+{
+  "name": "@ia-cloud/node-red-ia-cloud-common-nodes",
+  "description": "Node-RED nodes for commonly used with ia-cloud nodes.",
+  "version": "0.0.1",
+  "author": {
+    "name": "ia-cloud",
+    "url": "https://www.ia-cloud.com"
+  },
+  "bugs": {
+    "url": "https://github.com/ia-cloud/node-red-ia-cloud-common-nodes/issues"
+  },
+  "homepage": "https://github.com/ia-cloud/node-red-ia-cloud-common-nodes#readme",
+  "keywords": [],
+  "license": "Apache-2.0",
+  "main": "index.js",
+  "node-red": {
+    "nodes": {
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ia-cloud/node-red-ia-cloud-common-nodes.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-import": "^2.20.0"
+  }
+}
