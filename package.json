@@ -1,20 +1,20 @@
 {
-  "name": "@ia-cloud/node-red-ia-cloud-common-nodes",
+  "name": "@ia-cloud/node-red-contrib-ia-cloud-common-nodes",
   "description": "Node-RED nodes for commonly used with ia-cloud nodes.",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "author": {
     "name": "ia-cloud",
     "url": "https://www.ia-cloud.com"
   },
   "bugs": {
-    "url": "https://github.com/ia-cloud/node-red-ia-cloud-common-nodes/issues"
+    "url": "https://github.com/ia-cloud/node-red-contrib-ia-cloud-common-nodes/issues"
   },
   "devDependencies": {
     "eslint": "^7.2.0",
     "eslint-config-airbnb-base": "^14.2.0",
     "eslint-plugin-import": "^2.21.2"
   },
-  "homepage": "https://github.com/ia-cloud/node-red-ia-cloud-common-nodes#readme",
+  "homepage": "https://github.com/ia-cloud/node-red-contrib-ia-cloud-common-nodes#readme",
   "keywords": [
     "node-red"
   ],
@@ -27,7 +27,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ia-cloud/node-red-ia-cloud-common-nodes.git"
+    "url": "git+https://github.com/ia-cloud/node-red-contrib-ia-cloud-common-nodes.git"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
