@@ -15,7 +15,9 @@
     "eslint-plugin-import": "^2.21.2"
   },
   "homepage": "https://github.com/ia-cloud/node-red-ia-cloud-common-nodes#readme",
-  "keywords": [],
+  "keywords": [
+    "node-red"
+  ],
   "license": "Apache-2.0",
   "main": "index.js",
   "node-red": {
