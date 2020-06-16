@@ -1,7 +1,7 @@
 {
   "name": "@ia-cloud/node-red-ia-cloud-common-nodes",
   "description": "Node-RED nodes for commonly used with ia-cloud nodes.",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "author": {
     "name": "ia-cloud",
     "url": "https://www.ia-cloud.com"
