@@ -3,6 +3,11 @@
     "node-name": "CCS接続設定",
     "password": "パスワード",
     "url": "URL",
-    "userId": "ユーザーID"
+    "userId": "ユーザーID",
+    "version": "ia-cloud API バージョン",
+    "proxyset": "プロキシ設定",
+    "proxy": "プロキシサーバーアドレス",
+    "tip-version": "ia-cloud APIのバージョンを指定。通常はVer.2を選択、旧バージョンのエンドポイントを利用する場合のみVer.1を選択ください。urlにはそれぞれのバージョンのエンドポイントを設定ください。",
+    "tip-proxy": "プロキシサーバを経由する場合は、サーバアドレスを入力ください。"
   }
 }

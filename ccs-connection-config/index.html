@@ -1,8 +1,20 @@
-<script type="text/x-red" data-template-name="ia-cloud-ccs-connection-config">
+<script type="text/html" data-template-name="ia-cloud-ccs-connection-config">
+
+    <!-- version -->
+    <div class="form-row">
+        <label for="node-config-input-version"><i class="fa fa-tag"></i> <span data-i18n="ia-cloud-ccs-connection-config.version"></label>
+        <select style="display:inline-block; width: 150px" id="node-config-input-version">
+            <option selected="selected" value="V2">Ver.2</option>
+            <option value="V1">Ver.1</option>
+        </select>
+    </div>
+    <div class="form-row">
+        <div class="form-tips" id="tip-version"><span data-i18n="ia-cloud-ccs-connection-config.tip-version"></span></div>
+    </div>
 
     <!-- url -->
     <div class="form-row">
-        <label for="node-config-input-url"><i class="fa fa-tag"></i> <span data-i18n="ia-cloud-ccs-connection-config.url" /></label>
+        <label for="node-config-input-url"><i class="fa fa-tag"></i> <span data-i18n="ia-cloud-ccs-connection-config.url"></label>
         <input type="text" id="node-config-input-url" data-i18n="[placeholder]ia-cloud-ccs-connection-config.url">
     </div>
     <!-- userId -->
@@ -15,9 +27,22 @@
         <label for="node-config-input-password"><i class="fa fa-lock"></i> <span data-i18n="ia-cloud-ccs-connection-config.password"></span></label>
         <input type="password" id="node-config-input-password">
     </div>
+    <!-- proxy -->
+    <div class="form-row">
+        <input type="checkbox" id="node-config-input-proxyset" style="display: inline-block; width: auto; vertical-align: top;">
+        <label for="node-config-input-proxyset" style="width: 70%;"><span data-i18n="ia-cloud-ccs-connection-config.proxyset"></span></label>
+        <div style="margin-left: 20px" class="node-config-input-proxy-row hide">
+            <div class="form-row">
+                <label for="node-config-input-proxy"><i class="fa fa-tag"></i> <span data-i18n="ia-cloud-ccs-connection-config.proxy"></span></label>
+                <input type="text" id="node-config-input-proxy">
+            </div>
+            <div class="form-tips" id="tip-proxy"><span data-i18n="ia-cloud-ccs-connection-config.tip-proxy"></span></div>
+        </div>
+    </div>
+    <hr>
     <!-- name -->
     <div class="form-row">
-        <label for="node-config-input-name"><i class="fa fa-tag"></i> <span data-i18n="node-red:common.label.name" /></label>
+        <label for="node-config-input-name"><i class="fa fa-tag"></i> <span data-i18n="node-red:common.label.name"></label>
         <input type="text" id="node-config-input-name" data-i18n="[placeholder]node-red:common.label.name">
     </div>
 
@@ -36,6 +61,9 @@
         defaults: {
             url: { value: '' },
             name: { value: '' },
+            proxy: { value: '' },
+            proxyset: { value: false },
+            version: { value: 'V2' },
         },
         credentials: {
             userId: { type: 'text' },
@@ -44,6 +72,22 @@
         label: function() {
             return this.name || this._('ia-cloud-ccs-connection-config.node-name');
         },
+        oneditprepare: function() {
+            $("#node-config-input-proxyset").change(function() {
+                if ($(this).is(":checked")) {
+                    $(".node-config-input-proxy-row").show();
+                } else {
+                    $(".node-config-input-proxy-row").hide();
+                    $('#node-config-input-proxy').val("");
+                }
+            });
+            if ($('#node-config-input-proxy').val()) {
+                $('#node-config-input-proxyset').prop('checked', true);
+            } else {
+                $('#node-config-input-proxyset').prop('checked', false);
+            }
+            $("#nnode-config-input-proxyset").change();
+        }
     });
 
 </script>
