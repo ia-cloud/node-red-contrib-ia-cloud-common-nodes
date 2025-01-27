@@ -87,55 +87,8 @@ class iaCloudConnection {
 
     };
 
-    // a innternal method for http requests
-    _iaCloudRequest = async (reqBody, objStream) => {
-
-        let options =this.options;
-        let cnctInfo = this.cnctInfo;
-
-        if (cnctInfo.protocol === "websocket" ) {
-            // add messageID
-            options.id = crypto.randomUUID();
-            reqBody.id = options.id;
-        }
-
-        // if request body is not stream, make it
-        let reqBodyJson = JSON.stringify(reqBody);
-        let objStrArray = reqBodyJson.split("__= file content__");
-        let reqBodyStream ;
-        try {
-            // make request stream with objectStream、if exist.
-            if (objStrArray.length !== 1 && objStream) {
-
-                // prepare stream for request body
-                let reqBodyStream = new Stream.PassThrough();
-                // write first part of request body json string
-                reqBodyStream.write(objStrArray[0]);
-                objStream.pip(reqBodyStream);
-                reqBodyStream.write(objStrArray[1]);
-            }
-            else {
-                reqBodyStream = Stream.Readable.from(reqBodyJson);
-            }
-            const resBody = await this.cnct.iaCloudRequest(reqBodyStream);
-
-            if (cnctInfo.protocol === "websocket" && resBody.id !== options.id) 
-                throw (new iaCError.IaCloudLowerError())
-
-            return resBody;
-
-        } catch(err) {
-console.log(err);
-            throw err;
-        } finally {
-            reqBodyStream.destroy()
-        }
-
-    };
-
     // a external method for a ia-cloud connect request
     connect = async (auth) => {
-
         let info = this.cnctInfo;
         let options =this.options;
 
@@ -160,7 +113,7 @@ console.log(err);
             reqBody.Authorization = "Basic " + Buffer.from(options.username + ":" + options.password).toString("base64");
 
         try {
-            let res = await this._iaCloudRequest(reqBody);
+            let res = await this.cnct.iaCloudRequest(reqBody);
             if (res.FDSKey === reqBody.FDSKey && res.FDSType === reqBody.FDSType 
                && ((res.userID === reqBody.userID && info.protocol === "REST1") || (info.protocol !== "REST1"))
             ) {
@@ -177,12 +130,12 @@ console.log(err);
             info.status = "Disconnected";
             throw error;
         } finally {
+            this.cnctInfo = info;
             this.fContext.set(this.cnctInfoName, info);
         }
     };
 
     getStatus = async () => {
-
         let info = this.cnctInfo;
 
         // getStatus リクエストのリクエストボディ
@@ -194,7 +147,7 @@ console.log(err);
         }
 
         try {
-            let res = await this._iaCloudRequest(reqBody);
+            let res = await this.cnct.iaCloudRequest(reqBody);
 
             if (res.serviceID === reqBody.serviceID 
                     && res.FDSKey === info.FDSKey ) {
@@ -212,13 +165,13 @@ console.log(err);
             info.status = "Disconnected";
             throw error;
         } finally {
+            this.cnctInfo = info;
             this.fContext.set(this.cnctInfoName, info);
         }
 
     };
 
     store = async (obj) => {
-    
         let info = this.cnctInfo;
         let fileRs = null;
         // リクエストのリクエストボディ
@@ -255,7 +208,7 @@ console.log(err);
         }
 
         try {
-            let res = await this._iaCloudRequest(reqBody, fileRs);
+            let res = await this.cnct.iaCloudRequest(reqBody, fileRs);
             if (res.serviceID === reqBody.serviceID && res.status.toLowerCase() === "ok" )  {
 
                 // ここで、serviceIDをconfiguration nodeである自身の接続情報にセットする
@@ -271,6 +224,7 @@ console.log(err);
             info.status = "Disconnected";
             throw error;
         } finally {
+            this.cnctInfo = info;
             this.fContext.set(this.cnctInfoName, info);
         }
     }
@@ -287,7 +241,7 @@ console.log(err);
         };
 
         try {
-            let res = await this._iaCloudRequest(reqBody);
+            let res = await this.cnct.iaCloudRequest(reqBody);
 
             if (res.serviceID === reqBody.serviceID && res.status.toLowerCase() === "ok" )  {
 
@@ -304,6 +258,7 @@ console.log(err);
             info.status = "Disconnected";
             throw error;
         } finally {
+            this.cnctInfo = info;
             this.fContext.set(this.cnctInfoName, info);
         }
     };
@@ -321,7 +276,7 @@ console.log(err);
 
         try {
             // make request body to the stream, and send
-            let res = await this._iaCloudRequest(reqBody);
+            let res = await this.cnct.iaCloudRequest(reqBody);
 
             if (res.serviceID === reqBody.serviceID && res.status.toLowerCase() === "ok" )  {
 
@@ -338,6 +293,7 @@ console.log(err);
             info.status = "Disconnected";
             throw error;
         } finally {
+            this.cnctInfo = info;
             this.fContext.set(this.cnctInfoName, info);
         }
     };
@@ -348,7 +304,6 @@ console.log(err);
     };
 
     terminate = async () => {
-
         let info = this.cnctInfo;
         let options =this.options;
 
@@ -359,7 +314,7 @@ console.log(err);
         };
 
         try {
-            let res = await this._iaCloudRequest(reqBody);
+            let res = await this.cnct.iaCloudRequest(reqBody);
 
             if (res.userID === options.username &&
                 res.FDSKey === info.FDSKey && 
@@ -374,6 +329,7 @@ console.log(err);
         } catch(error) {
             throw error;
         } finally {
+            this.cnctInfo = info;
             this.fContext.set(this.cnctInfoName, info);
         }
     };

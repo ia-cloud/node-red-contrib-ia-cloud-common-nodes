@@ -16,7 +16,7 @@
 
 "use strict";
 
-const moment = require("moment");
+const moment = require("moment");   // just for trace
 
 // The readme of the Got package V12 says
 /*
@@ -30,6 +30,7 @@ Got v11 is no longer maintained and we will not accept any backport requests. */
 // need 'hpagent' package for proxy connection on Got12
 const { HttpsProxyAgent } = require('hpagent');
 const iaCError = require("./ia-cloud-error");
+const iaCReqBodyMaker = require("./ia-cloud-request-body-maker");
 
 class iaCloudCnctRest {
 
@@ -43,7 +44,7 @@ class iaCloudCnctRest {
     };
 
     // a external method for http requests
-    iaCloudRequest = async (reqBodyStream) => {
+    iaCloudRequest = async (reqBody, objStream) => {
 
         let options = this.options;
 
@@ -58,9 +59,11 @@ class iaCloudCnctRest {
                 this.got = got;
                 }
                 catch (err) {
-                    console.log(err);    
+                    throw(err);
                 }
             }
+            const reqBodyStream = iaCReqBodyMaker(reqBody, objStream);
+
             // promisify streaming from POST request 
             await new Promise((resolve, reject) => {                
 
@@ -92,7 +95,6 @@ class iaCloudCnctRest {
             }
         }
         catch(err) {
-console.log(err.code + " REST@ " + moment().format('DDTHH:mm:ss.SSS'));
             resBodyStream.destroy();
             if (err.code === 'ETIMEDOUT' || err.code === 'ESOCKETTIMEDOUT'
                     || err.code === 'ENOTFOUND') {     
@@ -104,7 +106,7 @@ console.log(err.code + " REST@ " + moment().format('DDTHH:mm:ss.SSS'));
         }
     };
     closeConnection = async () => {
-        resBodyStream.destroy();
+
     };
 }
 module.exports = iaCloudCnctRest;
