@@ -32,7 +32,7 @@ class iaCloudV2websocket {
         this.messages = new Map();
     };
 
-    _websocketPrepare = async (options) => {
+    #websocketPrepare = async (options) => {
         try {
             // instanciate websocket class
             await new Promise((resolve,reject) => {
@@ -44,38 +44,45 @@ class iaCloudV2websocket {
                 socket.on('error', (error) => {
                     reject (error);
                 });
+                // when response message received
+                socket.on('message', (data) => {
+                    // parse JSON to get a response object
+                    const response = JSON.parse(data);
+                    // get message ID
+                    const id = response.id;
+                    delete response.id;
+                    // get a resolve function from the messages Map
+                    if (this.messages.has(id)) {
+                        const resolver = this.messages.get(id);
+                        this.messages.delete(id);
+                        resolver(response);
+                    }
+                });
+                socket.on('close', (data) => {
+                    //wait 1sec and reopen websocket
+                    setTimeout(() => this.#websocketPrepare(this.options), 1000);
+                });
             });
-            // when response message received
-            this.wbs.on('message', (data) => {
-                // parse JSON to get a response object
-                const response = JSON.parse(data);
-                // get message ID
-                const id = response.id;
-                delete response.id;
-                // get a resolve function from the messages Map
-                if (this.messages.has(id)) {
-                    const resolver = this.messages.get(id);
-                    this.messages.delete(id);
-                    resolver(response);
-                }
-            });
+
         } catch (err) {
             throw (new iaCError.IaCloudLowerError(err));
         }
     }
 
-    _websocketReconnect = async () => {
+    #websocketReconnect = async () => {
         const delay = (TIMEOUT - 1000) / MAXATTEMPTS;
 
-        let wbsStatus = this.wbs.readyState;
+        let wbsStatus;
+
         for (let attempt = 0; attempt < MAXATTEMPTS; attempt++) {
+            wbsStatus = this.wbs.readyState;
             if (wbsStatus === WebSocket.OPEN) {
                 return;
             }
             if (wbsStatus === WebSocket.CLOSED) {
                 try {
                     // remake a websocket
-                    await this._websocketPrepare(this.options);
+                    await this.#websocketPrepare(this.options);
                     return
                 } catch (error) {
                     throw (error);
@@ -88,7 +95,7 @@ class iaCloudV2websocket {
         throw new iaCError.IaCloudLowerError("can't open websocket");
     }
 
-    _sendStreamMessage = async (reqBody, objStream) => {
+    #sendStreamMessage = async (reqBody, objStream) => {
         return new Promise((resolve, reject) => {
             // add websocket message ID
             reqBody.id = crypto.randomUUID();
@@ -114,7 +121,7 @@ class iaCloudV2websocket {
         })   
     }
 
-    _closeConnection = () => {
+    #closeConnection = () => {
         return new Promise((resolve) => {
             this.wbs.on('close', () => {
               resolve();
@@ -128,12 +135,11 @@ class iaCloudV2websocket {
 
         try{
             // if websocket dose not exist, make it
-            if (!this.wbs) await this._websocketPrepare(this.options);
+            if (!this.wbs) await this.#websocketPrepare(this.options);
             // check websocket connection 
-            await this._websocketReconnect();
-            const resBody = await this._sendStreamMessage(reqBody, objStream);
+            if (this.wbs.readyState !== WebSocket.OPEN) await this.#websocketReconnect();
+            const resBody = await this.#sendStreamMessage(reqBody, objStream);
             return resBody;
-
         } catch (err) {
             if(err.code === 'ETIMEDOUT' || err.code === 'ESOCKETTIMEDOUT'
             || err.code === 'ENOTFOUND') {
@@ -143,8 +149,9 @@ class iaCloudV2websocket {
             }
         }
     }
+    // close connection
     closeConnection = async () => {
-        this._closeConnection();
+        this.#closeConnection();
     };
 }
 module.exports = iaCloudV2websocket;

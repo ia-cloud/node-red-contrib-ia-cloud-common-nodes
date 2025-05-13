@@ -71,8 +71,9 @@ class iaCloudConnection {
                     this.options.agent = {https: new HttpsProxyAgent(cnctInfo.proxy)}
             }
             else if (cnctInfo.protocol === "websocket") {
+                let url = 
                 this.options = {
-                    url: cnctInfo.url,
+                    url: cnctInfo.url+"?FDSKey="+encodeURIComponent(cnctInfo.FDSKey),
                     username: auth.username,
                     password: auth.password,
                     maxRedirects: 21,
@@ -85,6 +86,69 @@ class iaCloudConnection {
         }
         this.fContext.set(cnctInfoName, cnctInfo);
 
+    };
+
+    #iaCloudRequest = async (reqBody, objStream) => {
+        let res = null;
+        let cnt = 0;
+        let info = this.cnctInfo;
+        let options =this.options;
+
+        while(true) {
+            try {
+                //send a request to CCS
+                res = await this.cnct.iaCloudRequest(reqBody, objStream);
+
+                // check a response
+                switch (reqBody.request) {
+                    case "connect":
+                        if (res.FDSKey !== reqBody.FDSKey || res.FDSType !== reqBody.FDSType) 
+                            throw new iaCError.IaCloudAPIError();
+                        info.serviceID = res.serviceID;
+                        info.status = "Connected";
+                        info.cnctTs = moment().format();
+                        break;
+                    case "getStatus":
+                        if (res.serviceID !== reqBody.serviceID || res.FDSKey !== info.FDSKey)
+                            throw new iaCError.IaCloudAPIError();
+                        info.serviceID = res.newServiceID;
+                        info.status = "Connected";
+                        info.lastReqTs = moment().format();
+                        break;
+                    case "store":
+                    case "retrieve":
+                    case "retrieveArray":
+                        if (res.serviceID !== reqBody.serviceID || res.status.toLowerCase() !== "ok")
+                            throw new iaCError.IaCloudAPIError();
+                        info.serviceID = res.newServiceID;
+                        info.status = "Connected";
+                        info.lastReqTs = moment().format();
+                        break;
+                    case "terminate":
+                        if (res.userID !== options.username || res.FDSKey !== info.FDSKey 
+                            || res.serviceID !== reqBody.serviceID)
+                            throw new iaCError.IaCloudAPIError();
+                        info.serviceID = "";
+                        info.status = "Disconnected";
+                        break;
+                }
+                // got the response
+                break;
+            } catch(error) {
+                if (++cnt >= 3 || reqBody.request == "connect") {
+                    info.serviceID = "";
+                    info.status = "Disconnected";
+                    // retry error
+                    throw error;
+                }
+                //waiting retry request
+                await new Promise (resolve => setTimeout(resolve, 1000));
+            } 
+        }
+        // set back the connection info
+        this.cnctInfo = info;
+        this.fContext.set(this.cnctInfoName, info);
+        return res;
     };
 
     // a external method for a ia-cloud connect request
@@ -107,31 +171,15 @@ class iaCloudConnection {
             timestamp: moment().format(),
             comment: info.comment
         }
-
         if (info.protocol === "REST1") reqBody.userID = options.username;
         if (info.protocol === "websocket") 
             reqBody.Authorization = "Basic " + Buffer.from(options.username + ":" + options.password).toString("base64");
 
         try {
-            let res = await this.cnct.iaCloudRequest(reqBody);
-            if (res.FDSKey === reqBody.FDSKey && res.FDSType === reqBody.FDSType 
-               && ((res.userID === reqBody.userID && info.protocol === "REST1") || (info.protocol !== "REST1"))
-            ) {
-                // ここで、serviceIDをconfiguration nodeである自身の接続情報にセットする
-                info.serviceID = res.serviceID;
-                info.status = "Connected";
-                info.cnctTs = moment().format();
-                return res;
-            } else {
-                throw new iaCError.IaCloudAPIError();
-            }
+            return await this.#iaCloudRequest(reqBody);
+
         } catch(error) {
-            info.serviceID = "";
-            info.status = "Disconnected";
             throw error;
-        } finally {
-            this.cnctInfo = info;
-            this.fContext.set(this.cnctInfoName, info);
         }
     };
 
@@ -145,28 +193,10 @@ class iaCloudConnection {
             timestamp: moment().format(),
             comment: info.comment
         }
-
         try {
-            let res = await this.cnct.iaCloudRequest(reqBody);
-
-            if (res.serviceID === reqBody.serviceID 
-                    && res.FDSKey === info.FDSKey ) {
-
-                // ここで、serviceIDをconfiguration nodeである自身の接続情報にセットする
-                info.serviceID = res.newServiceID;
-                info.status = "Connected";
-                info.lastReqTs = moment().format();
-                return res;
-            } else {
-                throw new iaCError.IaCloudAPIError();
-            }
+            return await this.#iaCloudRequest(reqBody);
         } catch(error) {
-            info.serviceID = "";
-            info.status = "Disconnected";
             throw error;
-        } finally {
-            this.cnctInfo = info;
-            this.fContext.set(this.cnctInfoName, info);
         }
 
     };
@@ -208,24 +238,9 @@ class iaCloudConnection {
         }
 
         try {
-            let res = await this.cnct.iaCloudRequest(reqBody, fileRs);
-            if (res.serviceID === reqBody.serviceID && res.status.toLowerCase() === "ok" )  {
-
-                // ここで、serviceIDをconfiguration nodeである自身の接続情報にセットする
-                info.serviceID = res.newServiceID;
-                info.status = "Connected";
-                info.lastReqTs = moment().format();
-                return res;
-            } else {
-                throw new iaCError.IaCloudAPIError();
-            }
+            return await this.#iaCloudRequest(reqBody, fileRs);
         } catch(error) {
-            info.serviceID = "";
-            info.status = "Disconnected";
             throw error;
-        } finally {
-            this.cnctInfo = info;
-            this.fContext.set(this.cnctInfoName, info);
         }
     }
 
@@ -241,25 +256,9 @@ class iaCloudConnection {
         };
 
         try {
-            let res = await this.cnct.iaCloudRequest(reqBody);
-
-            if (res.serviceID === reqBody.serviceID && res.status.toLowerCase() === "ok" )  {
-
-                // ここで、serviceIDをconfiguration nodeである自身の接続情報にセットする
-                info.serviceID = res.newServiceID;
-                info.status = "Connected";
-                info.lastReqTs = moment().format();
-                return res;
-            } else {
-                throw new iaCError.IaCloudAPIError();
-            }
+            return await this.#iaCloudRequest(reqBody);
         } catch(error) {
-            info.serviceID = "";
-            info.status = "Disconnected";
             throw error;
-        } finally {
-            this.cnctInfo = info;
-            this.fContext.set(this.cnctInfoName, info);
         }
     };
     
@@ -276,25 +275,9 @@ class iaCloudConnection {
 
         try {
             // make request body to the stream, and send
-            let res = await this.cnct.iaCloudRequest(reqBody);
-
-            if (res.serviceID === reqBody.serviceID && res.status.toLowerCase() === "ok" )  {
-
-                // ここで、serviceIDをconfiguration nodeである自身の接続情報にセットする
-                info.serviceID = res.newServiceID;
-                info.status = "Connected";
-                info.lastReqTs = moment().format();
-                return res;
-            } else {
-                throw new iaCError.IaCloudAPIError();
-            }
+            return await this.cnct.iaCloudRequest(reqBody);
         } catch(error) {
-            info.serviceID = "";
-            info.status = "Disconnected";
             throw error;
-        } finally {
-            this.cnctInfo = info;
-            this.fContext.set(this.cnctInfoName, info);
         }
     };
 
@@ -314,23 +297,9 @@ class iaCloudConnection {
         };
 
         try {
-            let res = await this.cnct.iaCloudRequest(reqBody);
-
-            if (res.userID === options.username &&
-                res.FDSKey === info.FDSKey && 
-                res.serviceID === reqBody.serviceID ) {
-
-                // ここで、serviceIDをconfiguration nodeである自身の接続情報にセットする
-                info.serviceID = "";
-                info.status = "Disconnected";
-            } else {
-                throw new iaCError.IaCloudAPIError();
-            }
+            return await this.cnct.iaCloudRequest(reqBody);
         } catch(error) {
             throw error;
-        } finally {
-            this.cnctInfo = info;
-            this.fContext.set(this.cnctInfoName, info);
         }
     };
 
