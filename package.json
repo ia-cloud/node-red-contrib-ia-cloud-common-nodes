@@ -10,10 +10,11 @@
     "url": "https://github.com/ia-cloud/node-red-contrib-ia-cloud-common-nodes/issues"
   },
   "dependencies": {
-    "moment": "^2.30.1",
-    "ws": "^7.5.10",
     "got": "^12.6.1",
-    "hpagent": "1.2.0"
+    "hpagent": "1.2.0",
+    "moment": "^2.30.1",
+    "serialport": "^13.0.0",
+    "ws": "^7.5.10"
   },
   "devDependencies": {
     "eslint": "^7.2.0",
@@ -28,7 +29,8 @@
   "main": "index.js",
   "node-red": {
     "nodes": {
-      "ia-cloud-ccs-connection-config": "ccs-connection-config/index.js"
+      "ia-cloud-ccs-connection-config": "ccs-connection-config/index.js",
+      "ia-cloud-ccs-serialport-list": "serialport-list/index.js"
     }
   },
   "repository": {
