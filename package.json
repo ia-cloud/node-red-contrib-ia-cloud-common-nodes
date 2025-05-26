@@ -27,6 +27,9 @@
   ],
   "license": "Apache-2.0",
   "main": "index.js",
+  "engines": {
+    "node": ">=18"
+  },
   "node-red": {
     "nodes": {
       "ia-cloud-ccs-connection-config": "ccs-connection-config/index.js",
