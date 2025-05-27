@@ -1,13 +1,20 @@
 {
   "name": "@ia-cloud/node-red-contrib-ia-cloud-common-nodes",
   "description": "Node-RED nodes for commonly used with ia-cloud nodes.",
-  "version": "0.0.5",
+  "version": "0.1.0",
   "author": {
     "name": "ia-cloud",
     "url": "https://www.ia-cloud.com"
   },
   "bugs": {
     "url": "https://github.com/ia-cloud/node-red-contrib-ia-cloud-common-nodes/issues"
+  },
+  "dependencies": {
+    "got": "^12.6.1",
+    "hpagent": "1.2.0",
+    "moment": "^2.30.1",
+    "serialport": "^13.0.0",
+    "ws": "^7.5.10"
   },
   "devDependencies": {
     "eslint": "^7.2.0",
@@ -20,9 +27,13 @@
   ],
   "license": "Apache-2.0",
   "main": "index.js",
+  "engines": {
+    "node": ">=18"
+  },
   "node-red": {
     "nodes": {
-      "ia-cloud-ccs-connection-config": "ccs-connection-config/index.js"
+      "ia-cloud-ccs-connection-config": "ccs-connection-config/index.js",
+      "ia-cloud-ccs-serialport-list": "serialport-list/index.js"
     }
   },
   "repository": {

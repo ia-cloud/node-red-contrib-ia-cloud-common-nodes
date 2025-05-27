@@ -3,6 +3,11 @@
     "node-name": "CCS connection config",
     "password": "Password",
     "url": "URL",
-    "userId": "User ID"
+    "userId": "User ID",
+    "version": "ia-cloud API version",
+    "proxyset": "via proxy",
+    "proxy": "proxy address",
+    "tip-version": "Specify the ia-cloud API version. Normally, select Ver.2. Select Ver.1 only if you use an older version of the endpoint.Set the endpoint of each version to the url.",
+  "tip-proxy": "If you use a proxy server, enter the server address."
   }
 }
