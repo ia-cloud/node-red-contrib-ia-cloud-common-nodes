@@ -32,8 +32,7 @@
   },
   "node-red": {
     "nodes": {
-      "ia-cloud-ccs-connection-config": "ccs-connection-config/index.js",
-      "ia-cloud-ccs-serialport-list": "serialport-list/index.js"
+      "ia-cloud-ccs-connection-config": "ccs-connection-config/index.js"
     }
   },
   "repository": {
