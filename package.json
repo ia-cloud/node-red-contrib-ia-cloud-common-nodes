@@ -13,7 +13,6 @@
     "got": "^12.6.1",
     "hpagent": "1.2.0",
     "moment": "^2.30.1",
-    "serialport": "^13.0.0",
     "ws": "^7.5.10"
   },
   "devDependencies": {
