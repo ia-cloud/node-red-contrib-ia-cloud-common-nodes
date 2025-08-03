@@ -1,0 +1,160 @@
+<!--
+ * Copyright 2025 Hiro Hashimukai on the ia-cloud project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ -->
+
+<script type="text/html" data-template-name="ia-cloud-ccs-connection-configII">
+
+    <!-- version -->
+    <div class="form-row">
+        <label for="node-config-input-version"><i class="fa fa-tag"></i> <span data-i18n="editor.version"></label>
+        <select style="display:inline-block; width: 150px" id="node-config-input-version">
+            <option selected="selected" value="V2">Ver.2</option>
+            <option value="V1">Ver.1</option>
+        </select>
+    </div>
+    <div class="form-row">
+        <div class="form-tips" id="tip-version"><span data-i18n="editor.tip-version"></span></div>
+    </div>
+
+    <!-- url -->
+    <div class="form-row">
+        <label for="node-config-input-url"><i class="fa fa-tag"></i> <span data-i18n="editor.url"></label>
+        <input type="text" id="node-config-input-url" data-i18n="[placeholder]editor.url">
+    </div>
+    <!-- userId -->
+    <div class="form-row">
+        <label for="node-config-input-userId"><i class="fa fa-user"></i> <span data-i18n="editor.userId"></span></label>
+        <input type="text" id="node-config-input-userId">
+    </div>
+    <!-- password -->
+    <div class="form-row">
+        <label for="node-config-input-password"><i class="fa fa-lock"></i> <span data-i18n="editor.password"></span></label>
+        <input type="password" id="node-config-input-password">
+    </div>
+    <!-- proxy -->
+    <div class="form-row">
+        <input type="checkbox" id="node-config-input-proxyset" style="display: inline-block; width: auto; vertical-align: top;">
+        <label for="node-config-input-proxyset" style="width: 70%;"><span data-i18n="editor.proxyset"></span></label>
+        <div style="margin-left: 20px" class="node-config-input-proxy-row hide">
+            <div class="form-row">
+                <label for="node-config-input-proxy"><i class="fa fa-tag"></i> <span data-i18n="editor.proxy"></span></label>
+                <input type="text" id="node-config-input-proxy">
+            </div>
+            <div class="form-tips" id="tip-proxy"><span data-i18n="editor.tip-proxy"></span></div>
+        </div>
+    </div>
+    <hr>
+
+    <!-- FDSKey -->
+    <div class="form-row">
+        <label for="node-config-input-FDSKey"> <span data-i18n="editor.FDSKey"></span></label>
+        <input type="text" id="node-config-input-FDSKey">
+    </div>
+    <!-- FDS comment -->
+    <div class="form-row">
+        <label for="node-config-input-comment"> <span data-i18n="editor.comment"></span></label>
+        <input type="text" id="node-config-input-comment">
+    </div>
+    <!-- detail configuration -->
+    <div class="form-row">
+        <input type="checkbox" id="node-config-input-details" style="display: inline-block; width: auto; vertical-align: top;">
+        <label for="node-config-input-details" style="width: 70%;"><span data-i18n="editor.details"></span></label>
+        <div style="margin-left: 20px" class="node-config-input-details-row hide">
+            <div class="form-row">
+                <label for="node-config-input-cnctRetryInterval"><span data-i18n="editor.cnctRetryInterval"></span></label>
+                <input type="number" min="0" id="node-config-input-cnctRetryInterval" style="margin-bottom: 10px">
+                <div class="form-tips" id="tip-cnctRetryInterval"><span data-i18n="editor.tip-cnctRetryInterval"></span></div>
+            </div>
+            <div class="form-row">
+                <label for="node-config-input-tappingInterval"><span data-i18n="editor.tappingInterval"></span></label>
+                <input type="number"  min="0" id="node-config-input-tappingInterval" style="margin-bottom: 10px">
+                <div class="form-tips" id="tip-tappingInterval"><span data-i18n="editor.tip-tappingInterval"></span></div>
+            </div>
+        </div>
+    </div>
+    <hr>
+
+    <!-- name -->
+    <div class="form-row">
+        <label for="node-config-input-name"><i class="fa fa-tag"></i> <span data-i18n="node-red:common.label.name"></label>
+        <input type="text" id="node-config-input-name" data-i18n="[placeholder]node-red:common.label.name">
+    </div>
+</script>
+
+<script type="text/javascript">
+
+    RED.nodes.registerType('ia-cloud-ccs-connection-configII',{
+        category: 'config',
+        color:"rgb(231, 180, 100)",
+        align: "right",
+        defaults: {
+            url: { value: '' },
+            proxy: { value: '' },
+            proxyset: { value: false },
+            version: { value: 'V2' },
+
+            name: {value:""},
+            FDSKey: {value:"", required: true},
+            comment:{value:""},
+            details:{value: false},
+            cnctRetryInterval:{value:60, validate: RED.validators.number()},
+            tappingInterval:{value:24, validate: RED.validators.number()}
+        },
+        credentials: {
+            userId: { type: 'text' },
+            password: { type: 'password' }
+        },
+        label: function() {
+            return this.name||this._("editor.paletteLabel");
+        },
+
+        oneditprepare: function() {
+            $("#node-config-input-proxyset").change(function() {
+                if ($(this).is(":checked")) {
+                    $(".node-config-input-proxy-row").show();
+                } else {
+                    $(".node-config-input-proxy-row").hide();
+                    $('#node-config-input-proxy').val("");
+                }
+            });
+            if ($('#node-config-input-proxy').val()) {
+                $('#node-config-input-proxyset').prop('checked', true);
+            } else {
+                $('#node-config-input-proxyset').prop('checked', false);
+            }
+            $("#nnode-config-input-proxyset").change();
+
+            $("#node-config-input-details").change(function() {
+                if ($(this).is(":checked")) {
+                    $(".node-config-input-details-row").show();
+                } else {
+                    $(".node-config-input-details-row").hide();
+                    $('#node-config-input-cnctRetryInterval').val(60);
+                    $('#node-config-input-tappingInterval').val(24);
+                }
+            });
+            if ($('#node-config-input-cnctRetryInterval').val() != 60
+                || $('#node-config-input-tappingInterval').val() != 24)
+            {
+                $('#node-config-input-details').prop('checked', true);
+            } else {
+                $('#node-config-input-details').prop('checked', false);
+            }
+            $("#node-config-input-details").change();
+
+        }
+    });
+
+</script>

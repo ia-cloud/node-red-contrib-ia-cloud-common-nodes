@@ -1,0 +1,24 @@
+{
+    "editor": {
+        "paletteLabel": "ia-cloud connect config",
+        "name": "Node name",
+
+        "password": "Password",
+        "url": "URL",
+        "userId": "User ID",
+        "version": "ia-cloud API version",
+        "proxyset": "via proxy",
+        "proxy": "proxy address",
+        "tip-version": "Specify the ia-cloud API version. Normally, select Ver.2. Select Ver.1 only if you use an older version of the endpoint.Set the endpoint of each version to the url.",
+        "tip-proxy": "If you use a proxy server, enter the server address.",
+
+        "details": "use details",
+        "FDSKey": "Unique Key of the data source",
+        "comment": "Discription of the data source",
+        "cnctRetryInterval": "CCS Retry Interval",
+        "tappingInterval": "CCS Tapping Interval",
+        "tip-cnctRetryInterval": "Retry interval in minutes for CCS connection error.Use 0 for no-retry.",
+        "tip-tappingInterval": "Tapping CCS interval in hours to check connection using getStatus request.Use 0 for no-retry."
+    },
+    "runtime": {}
+}

@@ -1,0 +1,58 @@
+<script type="text/html" data-help-name="ia-cloud-ccs-connection-configII">
+<p>ia-cloud CCS connection config node</p>
+
+<h3>Property list</h3>
+<dl class="message-properties">
+    <dt>ia-cloud API version<span class="property-type">select</span></dt>
+    <dd>ia-cloud Web API version of the CCS to be connected</dd>
+    <dt>URL<span class="property-type">string</span></dt>
+    <dd>URL of CCS tobe connected. Ver. 1 uses "https",
+         while Ver. 2 uses either "https" or "wss" protocol.</dd>
+    <dt>userID<span class="property-type">string</span></dt>
+    <dd>userD for the CCS authentication</dd>
+    <dt>password<span class="property-type">string</span></dt>
+    <dd>password for the CCS authentication</dd>    
+    <dt>proxy<span class="property-type">checkbox</span></dt>
+    <dd>check this to use a proxy server </dd>
+    <dd>proxy setting</dd>
+    <dl class="message-properties" style="margin-left: 8px">
+        <dt>proxy server address<span class="property-type">string</span></dt>
+        <dd>network address of the proxy server</dd>
+    </dl>
+    <dt>Data source unique key <span class="property-type">string</span></dt>
+    <dd>A unique key for the device of the ia-cloud connection node. Set to the FDSKey of the ia-cloud object</dd>
+    <dt>Data source description <span class="property-type">string</span></dt>
+    <dd>Description of ia-cloud connection node</dd>
+    <dt>Enable Advanced Settings<span class="property-type">Check</span></dt>
+    <dd>Advanced settings for connecting to ia-cloud</dd>
+    <dt>Detailed settings</dt>
+    <dl class="message-properties" style="margin-left: 8px">
+        <dt>CCS Connection Retry Interval<span class="property-type">Number</span></dt>
+        <dd>Retry interval when connection request to CCS becomes an error. </dd>
+        <dd>Initial value is 1 minute. Gradually lengthens and the maximum is to make a connection request every hour. </dd>
+        <dt>Connection Check Interval<span class="property-type">Number</span></dt>
+        <dd>Interval for checking connection to CCS. Default value is 24 hours</dd>
+    </dl>
+    <dt>node name<span class="property-type">string</span></dt>
+    <dd>Name to give to individual Node</dd>
+</dl>
+
+<h3>Input message</h3>
+
+<h3>Output message</h3>
+
+<h3>Details</h3>
+<p>This configuration node maintains a connection to the specified ia-cloud Cloud Center Server (CCS).
+It sends "connect" and "getStatus" messages according to the ia-cloud Web API protocol and
+ is used to maintain the connection.
+<h4>Advanced</h4>
+<p>The maximum retry interval for connection to CCS can specified.</p>
+<p>Even if there is no input message, the connection confirmation to CCS is automatically performed. The connection check interval can be specified. </p>
+
+<h4>Proxy</h4>
+<p>When using a proxy server, you can also set it with <code>http_proxy=...</code> for the OS environment line. A Node-RED restart is required. </p>
+
+<h4>Data Source Unique Key</h4>
+<p>Multiple ia-cloud-cnct nodes can be used at the same time, but do not duplicate the FDSKey (unique key of data source).</p>
+    
+</script>
