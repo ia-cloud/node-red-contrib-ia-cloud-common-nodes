@@ -1,5 +1,6 @@
 {
   "ia-cloud-ccs-connection-config": {
+    "tip-deprecated":"このノードの使用は非推奨です。古いアプリケーションフローの維持のため残してあります。新しいノード[ia-cloud接続II]とその設定ノードを使用してください。",
     "node-name": "CCS接続設定",
     "password": "パスワード",
     "url": "URL",

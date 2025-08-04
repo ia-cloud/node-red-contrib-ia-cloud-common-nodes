@@ -1,5 +1,6 @@
 {
   "ia-cloud-ccs-connection-config": {
+    "tip-deprecated":"This node is deprecated. Just usage for maintaining the old application flow. Please use the new node [ia-cloudconnectII] and it's configuration node.",
     "node-name": "CCS connection config",
     "password": "Password",
     "url": "URL",
