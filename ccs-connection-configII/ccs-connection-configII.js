@@ -172,8 +172,8 @@ module.exports = function(RED) {
                     case "retrieve":
                         resp = await iaC.retrieve(dataObject)
                         break;
-                    case "retrieveArry":
-                        resp = await iaC.retrieveArry(dataObject)
+                    case "retrieveArray":
+                        resp = await iaC.retrieveArray(dataObject)
                         break;
                     case "convey":
                         resp = await iaC.convey(dataObject)
