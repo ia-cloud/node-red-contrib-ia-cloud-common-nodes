@@ -1,0 +1,57 @@
+<script type="text/html" data-help-name="ia-cloud-ccs-connection-configII">
+<p>ia-cloud CCS接続設定ノード</p>
+
+<h3>プロパティ項目</h3>
+<dl class="message-properties">
+    <dt>ia-cloud API バージョン<span class="property-type">選択</span></dt>
+    <dd>接続するCCSの、ia-cloud Web APIのバージョン</dd>
+    <dt>URL<span class="property-type">文字列</span></dt>
+    <dd>接続するCCSエンドポイントのURL。Ver.1は"https"、Ver.2は"https" or "wss"プロトコル。</dd>
+    <dt>ユーザID<span class="property-type">文字列</span></dt>
+    <dd>CCSへ接続する際のユーザID</dd>
+    <dt>パスワード<span class="property-type">文字列</span></dt>
+    <dd>CCSへ接続する際のパスワード</dd>
+    <dt>プロキシ設定<span class="property-type">チェックボックス</span></dt>
+    <dd>プロキシサーバを使用する場合にチェック</dd>
+    <dd>プロキシ設定内容</dd>
+    <dl class="message-properties" style="margin-left: 8px">
+        <dt>プロキシサーバアドレス<span class="property-type">文字列</span></dt>
+        <dd>使用するプロキシサーバのアドレス</dd>
+    </dl>
+    <dt>データソースのユニークキー<span class="property-type">文字列</span></dt>
+    <dd>ia-cloud接続ノードの機器のユニークキ。ia-cloud object のFDSKeyに設定される</dd>
+    <dt>データソースの説明<span class="property-type">文字列</span></dt>
+    <dd>ia-cloud接続ノードの説明</dd>
+    <dt>詳細設定有効<span class="property-type">チェック</span></dt>
+    <dd>ia-cloudへの接続に関する詳細設定</dd>
+    <dt>詳細設定内容</dt>
+    <dl class="message-properties" style="margin-left: 8px">
+        <dt>CCS接続リトライ間隔<span class="property-type">数値</span></dt>
+        <dd>CCSへの接続要求がエラーとなった場合のリトライ間隔。</dd>
+        <dd>初期値は1分。徐々に長くなり最大は1時間毎に接続要求をする。</dd>
+        <dt>接続確認間隔<span class="property-type">数値</span></dt>
+        <dd>CCSに対して接続確認を行う間隔。デフォルト値は24時間</dd>
+    </dl>
+    <dt>ノード名前<span class="property-type">文字列</span></dt>
+    <dd>個別のNodeに付与する名前</dd>
+</dl>
+
+<h3>入力メーッセージ</h3>
+
+<h3>出力メッセージ</h3>
+
+<h3>詳細説明</h3>
+<p>指定されたia-cloudの Cloud Center Server(CCS) への接続を保持する設定ノード。
+    ia-cloud Web APIのプロトコルにしたがって、"connect"や"getStatus"メッセージ
+    コマンドを送出し、接続を維持する</p>
+<h4>詳細設定</h4>
+<p>CCSへの接続ができない場合は、自動でリトライを行う。最大のリトライ間隔を設定できる。</p>
+<p>入力メッセージがない場合でも、CCSへの接続確認を自動で実施する。接続確認間隔を設定できる。</p>
+
+<h4>Proxy</h4>
+<p>Proxyサーバを利用する場合、OSの環境線数<code>http_proxy=...</code> で設定することも可能。Node-REDの再起動が必要です。</p>
+
+<h4>データソースのユニークキー</h4>
+<p>複数のia-cloud-cnctノードを「同時に使用できますが、FDSKey（データソースのユニークキー）は重複させないこと。 </p>
+
+</script>

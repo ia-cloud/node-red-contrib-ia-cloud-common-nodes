@@ -1,0 +1,24 @@
+{
+    "editor": {
+        "paletteLabel": "ia-cloud接続設定ノード",
+        "name": "ノード名称",
+
+        "password": "パスワード",
+        "url": "URL",
+        "userId": "ユーザーID",
+        "version": "ia-cloud API バージョン",
+        "proxyset": "プロキシ設定",
+        "proxy": "プロキシサーバーアドレス",
+        "tip-version": "ia-cloud APIのバージョンを指定。通常はVer.2を選択、旧バージョンのエンドポイントを利用する場合のみVer.1を選択ください。urlにはそれぞれのバージョンのエンドポイントを設定ください。",
+        "tip-proxy": "プロキシサーバを経由する場合は、サーバアドレスを入力ください。",
+
+        "details": "詳細設定有効",
+        "FDSKey": "データソースのユニークキー",
+        "comment": "データソースの説明",
+        "cnctRetryInterval": "CCS接続リトライ間隔",
+        "tappingInterval": "接続確認間隔",
+        "tip-cnctRetryInterval": "CCSへの接続が切断された時のリトライ間隔。分単位で設定。0はリトライを行わない",
+        "tip-tappingInterval": "CCSへの接続の確認のため、リクエストがなくとも、getStausリクエストを送出する間隔を、時間単位で設定。0は接続確認を行わない"
+    },
+    "runtime": {}
+}
